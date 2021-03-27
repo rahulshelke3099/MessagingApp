@@ -1,3 +1,10 @@
 .dropdown-toggle , .dropdown-item{
     cursor: pointer;
 }
+.fa-cog {
+    color: black;
+  }
+
+.fa{
+    margin-right: 4px;
+}

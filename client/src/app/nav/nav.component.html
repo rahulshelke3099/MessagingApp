@@ -1,23 +1,25 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="#">Messaging App</a>
+        <a class="navbar-brand" routerLink="/">Messaging App</a>
 
 
-        <ul class="navbar-nav mr-auto" *ngIf="accountService.currentUser$ |async">
+        <ul class="navbar-nav mr-auto" >
+            <ng-container *ngIf="accountService.currentUser$ |async">
             <li class="nav-item ">
-                <a class="nav-link" href="#">Matches</a>
+                <a class="nav-link" routerLink="/members" routerLinkActive="active">Matches</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">List</a>
+                <a class="nav-link" routerLink="/lists" routerLinkActive="active">List</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="#">Messages</a>
+                <a class="nav-link " routerLink="/messages" routerLinkActive="active">Messages</a>
             </li>
+        </ng-container> 
         </ul>
 
-        <div class="dropdown" *ngIf="accountService.currentUser$ |async" dropdown>
+        <div class="dropdown" *ngIf="(accountService.currentUser$ |async) as user" dropdown>
             <a class="dropdown-toggle text-light" dropdownToggle>
-                Welcome  User
+                Welcome {{user.username |titlecase}}
             </a>
 
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" *dropdownMenu>
@@ -28,8 +30,8 @@
         </div>
 
 
-        <form *ngIf="(accountService.currentUser$ |async)===null" #loginForm="ngForm" (ngSubmit)="login()" class="form-inline mt-2 mt-md-0"
-            autocomplete="off">
+        <form *ngIf="(accountService.currentUser$ |async)===null" #loginForm="ngForm" (ngSubmit)="login()"
+            class="form-inline mt-2 mt-md-0" autocomplete="off">
             <input class="form-control mr-sm-2" type="text" placeholder="UserName" name="username"
                 [(ngModel)]="model.username">
             <input class="form-control mr-sm-2" type="password" placeholder="Password" name="password"
