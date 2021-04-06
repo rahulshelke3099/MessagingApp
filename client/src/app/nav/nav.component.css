@@ -8,3 +8,9 @@
 .fa{
     margin-right: 4px;
 }
+
+img{
+    max-height: 50px;
+    border-radius: 50%;
+    display: inline;
+}
