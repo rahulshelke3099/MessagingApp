@@ -87,7 +87,7 @@ namespace API.Controllers
 
            if(await _userRepository.SaveAllAsync())
            {
-            return CreatedAtRoute("GetUser",new {usernme=user.UserName},_mapper.Map<Photo,PhotoDto>(photo));
+            return CreatedAtRoute(routeName:"GetUser",routeValues:new {username=user.UserName},value:_mapper.Map<Photo,PhotoDto>(photo));
             //    return _mapper.Map<Photo,PhotoDto>(photo);
            }
 
