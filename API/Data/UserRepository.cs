@@ -7,6 +7,8 @@ using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using API.Helper;
+using System;
 
 namespace API.Data
 {
@@ -29,11 +31,25 @@ namespace API.Data
             .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams usersParams)
         {
-           return await _context.Users
-            .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-           .ToListAsync();
+          var query= _context.Users.AsQueryable();
+          
+            query=query.Where(u=>u.UserName!= usersParams.CurrentUsername);
+            query=query.Where(u=>u.Gender == usersParams.Gender);
+        
+            var minDob=DateTime.Today.AddYears(-usersParams.MaxAge-1);
+            var maxDob=DateTime.Today.AddYears(-usersParams.MinAge);
+
+            query=query.Where(u=>u.DateOfBirth>=minDob && u.DateOfBirth<=maxDob);
+            query=usersParams.OrderBy switch
+            {
+                "created"=>query.OrderByDescending(u=>u.Created),
+                _=>query.OrderByDescending(u=>u.LastActive)
+            };
+
+          return await  PagedList<MemberDto>.CreateAsync( query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking()
+           ,usersParams.PageNumber,usersParams.PageSize);
         }
 
         public  async Task<AppUser> GetUserByIdAsync(int id)
